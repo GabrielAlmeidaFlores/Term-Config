@@ -1,0 +1,96 @@
+{
+  "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
+  "version": 3,
+  "palette": {
+    "light_blue": "#7aa2f7",
+    "dark_blue": "#3b4261",
+    "bg_dark": "#15161e",
+    "text_light": "#c0caf5",
+    "git_green": "#9ece6a",
+    "node_green": "#73daca",
+    "aws_orange": "#ff9e64",
+    "docker_cyan": "#2ac3de"
+  },
+  "blocks": [
+    {
+      "type": "prompt",
+      "alignment": "left",
+      "segments": [
+        {
+          "type": "text",
+          "style": "plain",
+          "foreground": "p:text_light",
+          "template": "\n"
+        },
+        {
+          "type": "session",
+          "style": "diamond",
+          "leading_diamond": "\ue0b6",
+          "foreground": "p:bg_dark",
+          "background": "p:light_blue",
+          "template": "{{ .UserName }} "
+        },
+        {
+          "type": "path",
+          "style": "powerline",
+          "powerline_symbol": "\ue0b0",
+          "foreground": "p:light_blue",
+          "background": "p:dark_blue",
+          "template": " \uf115 {{ .Path }} ",
+          "properties": {
+            "style": "folder"
+          }
+        },
+        {
+          "type": "git",
+          "style": "powerline",
+          "powerline_symbol": "\ue0b0",
+          "foreground": "p:bg_dark",
+          "background": "p:git_green",
+          "template": " \ue725 {{ .UpstreamIcon }}{{ .HEAD }}{{if .BranchStatus}} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }} \uf044 {{ .Working.String }}{{ end }}{{ if .Staging.Changed }} \uf046 {{ .Staging.String }}{{ end }} ",
+          "properties": {
+            "fetch_status": true,
+            "fetch_upstream_status": true
+          }
+        },
+        {
+          "type": "node",
+          "style": "powerline",
+          "powerline_symbol": "\ue0b0",
+          "foreground": "p:bg_dark",
+          "background": "p:node_green",
+          "template": " \ue718 {{ if .PackageManagerIcon }}{{ .PackageManagerIcon }} {{ end }}{{ .Full }} "
+        },
+        {
+          "type": "docker",
+          "style": "powerline",
+          "powerline_symbol": "\ue0b0",
+          "foreground": "p:bg_dark",
+          "background": "p:docker_cyan",
+          "template": " \uf308 {{ .Context }} "
+        },
+        {
+          "type": "aws",
+          "style": "powerline",
+          "powerline_symbol": "\ue0b0",
+          "foreground": "p:bg_dark",
+          "background": "p:aws_orange",
+          "template": " \ue7ad {{ .Profile }}{{ if .Region }}@{{ .Region }}{{ end }} "
+        }
+      ]
+    },
+    {
+      "type": "prompt",
+      "alignment": "left",
+      "segments": [
+        {
+          "type": "text",
+          "style": "plain",
+          "foreground": "p:light_blue",
+          "template": "\u276f "
+        }
+      ]
+    }
+  ],
+  "final_space": true
+}
