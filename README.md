@@ -12,7 +12,7 @@ Terminal configuration for **Alacritty**, **fastfetch**, **Oh My Posh**, **tmux*
   - [vim-tmux-navigator](https://github.com/christoomey/vim-tmux-navigator)
   - [tmux-resurrect](https://github.com/tmux-plugins/tmux-resurrect)
   - [tmux-continuum](https://github.com/tmux-plugins/tmux-continuum) (auto-restore)
-- **eza** — Modern `ls` replacement with icons, git status, and Tokyo Night theme
+- **eza** — Modern `ls` replacement with icons and git status
 
 ## Contents
 
@@ -22,8 +22,6 @@ Terminal configuration for **Alacritty**, **fastfetch**, **Oh My Posh**, **tmux*
 | `fastfetch/config.jsonc` | System info display | `~/.config/fastfetch/config.jsonc` |
 | `oh-my-posh/theme.json` | Prompt theme | `~/.config/oh-my-posh/theme.json` |
 | `tmux/tmux.conf` | Tmux core + Tokyo Night status bar | `~/.tmux.conf` |
-| `eza/theme.yml` | eza color theme | `~/.config/eza/theme.yml` |
-| `zsh/eza.zsh` | eza env + aliases (source in shell) | — |
 
 ## Prerequisites
 
@@ -103,10 +101,6 @@ ln -sf "$PWD/oh-my-posh/theme.json" ~/.config/oh-my-posh/theme.json
 
 # tmux
 ln -sf "$PWD/tmux/tmux.conf" ~/.tmux.conf
-
-# eza
-mkdir -p ~/.config/eza
-ln -sf "$PWD/eza/theme.yml" ~/.config/eza/theme.yml
 ```
 
 ### 3. Initialize Oh My Posh in your shell
@@ -129,27 +123,22 @@ Reload the shell:
 exec "$SHELL"
 ```
 
-### 4. Configure eza in your shell
+### 4. Configure eza
 
-On macOS, eza looks for its theme in `~/Library/Application Support/eza/` by default. Set `EZA_CONFIG_DIR` so it uses `~/.config/eza/` instead.
-
-**zsh** (`~/.zshrc`):
+Install eza:
 
 ```bash
-source "$PWD/zsh/eza.zsh"   # use the absolute path to this repo after clone
+brew install eza
 ```
 
-Or paste the contents of `zsh/eza.zsh` directly into your shell config.
-
-**bash** (`~/.bashrc`):
+Add these aliases to your shell config (`~/.zshrc` or `~/.bashrc`):
 
 ```bash
-export EZA_CONFIG_DIR="$HOME/.config/eza"
-
+# Aliases para eza
 alias ls='eza --icons --group-directories-first'
-alias ll='eza -l --icons --group-directories-first --git'
-alias la='eza -la --icons --group-directories-first --git'
-alias tree='eza --tree --icons --group-directories-first'
+alias ll='eza -lh --icons --git --group-directories-first'
+alias la='eza -lah --icons --git --group-directories-first'
+alias tree='eza --tree --icons'
 ```
 
 Reload the shell:
@@ -194,8 +183,6 @@ ls
 - `tmux.conf` uses `pbcopy` for vi-mode yank. On Linux, replace that binding with `xclip` or `wl-copy` if needed.
 - Continuum restore is enabled (`@continuum-restore on`). Sessions are restored automatically when tmux starts.
 - Theme colors follow Tokyo Night (`#7aa2f7`, `#3b4261`, `#15161e`, `#c0caf5`).
-- On macOS, unset `LS_COLORS` and `EZA_COLORS` if set — they override the eza theme file.
-- The eza theme is based on [eza-themes/tokyonight](https://github.com/eza-community/eza-themes/blob/main/themes/tokyonight.yml).
 
 ## License
 
