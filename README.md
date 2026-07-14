@@ -25,9 +25,29 @@ Terminal configuration for **Alacritty**, **fastfetch**, **Oh My Posh**, **tmux*
 
 ## Prerequisites
 
-Install the tools for your OS, then clone TPM (required by `tmux.conf`).
+Supported systems: **macOS**, **Ubuntu**, and **Fedora**.
 
-A [Nerd Font](https://www.nerdfonts.com/) is recommended so Alacritty, Oh My Posh, tmux, and eza icons render correctly (for example, JetBrainsMono Nerd Font or MesloLGM Nerd Font).
+Install all tools for your OS, then clone TPM (required by `tmux.conf`).
+
+A [Nerd Font](https://www.nerdfonts.com/) is required so Alacritty, Oh My Posh, tmux, and eza icons render correctly (JetBrainsMono Nerd Font is used in `alacritty.toml`).
+
+### Nerd Font
+
+**macOS:**
+
+```bash
+brew install --cask font-jetbrains-mono-nerd-font
+```
+
+**Ubuntu / Fedora:**
+
+```bash
+mkdir -p ~/.local/share/fonts
+curl -fLo /tmp/JetBrainsMono.zip \
+  https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/JetBrainsMono.zip
+unzip -o /tmp/JetBrainsMono.zip -d ~/.local/share/fonts/
+fc-cache -fv
+```
 
 ### macOS
 
@@ -40,34 +60,61 @@ brew install jandedobbeleer/oh-my-posh/oh-my-posh
 
 ```bash
 sudo apt update
-sudo apt install -y tmux git curl unzip
+sudo apt install -y git tmux curl unzip xclip wl-clipboard
 
-# fastfetch (Ubuntu 24.04+)
+# Alacritty (22.04+)
+sudo apt install -y alacritty
+
+# fastfetch (24.04+)
 sudo apt install -y fastfetch
 
-# eza
+# eza (24.04+)
 sudo apt install -y eza
 
 # Oh My Posh
 curl -s https://ohmyposh.dev/install.sh | bash -s
 ```
 
-On older Ubuntu releases without `fastfetch` in apt, install from the [official releases](https://github.com/fastfetch-cli/fastfetch/releases).
+On older Ubuntu releases without packages in apt:
 
-For Alacritty on Ubuntu, install from the [official releases](https://github.com/alacritty/alacritty/releases) or your preferred package source.
+```bash
+# fastfetch
+curl -sL https://api.github.com/repos/fastfetch-cli/fastfetch/releases/latest \
+  | grep browser_download_url \
+  | grep linux-amd64 \
+  | cut -d '"' -f 4 \
+  | xargs curl -Lo /tmp/fastfetch.deb
+sudo dpkg -i /tmp/fastfetch.deb
 
-Ensure `~/.local/bin` (or the install path printed by the script) is on your `PATH`.
+# eza
+sudo mkdir -p /etc/apt/keyrings
+curl -sS https://raw.githubusercontent.com/eza-community/eza/main/deb.asc \
+  | sudo gpg --dearmor -o /etc/apt/keyrings/gierens.gpg
+echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" \
+  | sudo tee /etc/apt/sources.list.d/gierens.list
+sudo apt update && sudo apt install -y eza
+
+# Alacritty — install from official releases
+curl -sL https://api.github.com/repos/alacritty/alacritty/releases/latest \
+  | grep browser_download_url \
+  | grep 'Alacritty-v.*-ubuntu.*\.deb' \
+  | cut -d '"' -f 4 \
+  | xargs curl -Lo /tmp/alacritty.deb
+sudo dpkg -i /tmp/alacritty.deb
+```
+
+Ensure `~/.local/bin` (or the path printed by the Oh My Posh install script) is on your `PATH`.
 
 ### Fedora
 
 ```bash
-sudo dnf install -y alacritty eza fastfetch tmux git curl unzip
+sudo dnf install -y alacritty eza fastfetch tmux git curl unzip xclip wl-clipboard
 curl -s https://ohmyposh.dev/install.sh | bash -s
 ```
 
-Ensure `~/.local/bin` (or the install path printed by the script) is on your `PATH`.
+Ensure `~/.local/bin` (or the path printed by the Oh My Posh install script) is on your `PATH`.
 
-### TPM (all platforms)
+### TPM
 
 ```bash
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
@@ -125,11 +172,7 @@ exec "$SHELL"
 
 ### 4. Configure eza
 
-Install eza:
-
-```bash
-brew install eza
-```
+Install eza first (see **Prerequisites** for macOS, Ubuntu, or Fedora).
 
 Add these aliases to your shell config (`~/.zshrc` or `~/.bashrc`):
 
@@ -180,7 +223,7 @@ ls
 
 ## Notes
 
-- `tmux.conf` uses `pbcopy` for vi-mode yank. On Linux, replace that binding with `xclip` or `wl-copy` if needed.
+- `tmux.conf` uses `pbcopy` for vi-mode yank on macOS. On Ubuntu/Fedora, replace that binding with `xclip` or `wl-copy` (both are listed in the Linux prerequisites).
 - Continuum restore is enabled (`@continuum-restore on`). Sessions are restored automatically when tmux starts.
 - Theme colors follow Tokyo Night (`#7aa2f7`, `#3b4261`, `#15161e`, `#c0caf5`).
 
